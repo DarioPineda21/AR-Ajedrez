@@ -1,0 +1,23 @@
+# Unity
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]serSettings/
+[Mm]emoryCaptures/
+# IDE
+.vs/
+.idea/
+*.csproj
+*.sln
+*.suo
+*.user
+*.pidb
+*.pdb
+# Builds
+*.apk
+*.aab
+# Licencia de Vuforia: NO subirla al repositorio
+**/VuforiaConfiguration.asset
