@@ -36,6 +36,9 @@ public class ChessGame : MonoBehaviour
 
     public bool legacyGui = false;             // el panel viejo con OnGUI (ya no se usa)
 
+    // Con AR la camara es la de Vuforia (la mueve el telefono): no se toca ni se acerca
+    [HideInInspector] public bool modoAR = false;
+
     int lastScreenW, lastScreenH;
 
     void Awake()
@@ -66,10 +69,7 @@ public class ChessGame : MonoBehaviour
             c.tag = "MainCamera";
             cam = c.AddComponent<Camera>();
         }
-        cam.clearFlags = CameraClearFlags.SolidColor;
-        cam.backgroundColor = new Color(0.10f, 0.10f, 0.13f);
-        cam.fieldOfView = 40f;
-        AdjustCamera(true);
+        if (!modoAR) ConfigurarCamaraPlana();
 
         if (FindFirstObjectByType<Light>() != null) return;   // la escena ya trae su luz
         GameObject l = new GameObject("Luz del tablero");
@@ -78,6 +78,22 @@ public class ChessGame : MonoBehaviour
         Light light = l.AddComponent<Light>();
         light.type = LightType.Directional;
         light.intensity = 1.1f;
+    }
+
+    void ConfigurarCamaraPlana()
+    {
+        cam.clearFlags = CameraClearFlags.SolidColor;
+        cam.backgroundColor = new Color(0.10f, 0.10f, 0.13f);
+        cam.fieldOfView = 40f;
+        AdjustCamera(true);
+    }
+
+    // Lo llama MarcadorAR cuando Vuforia no arranca: el juego vuelve a verse como en la prueba 1
+    public void ModoPlano()
+    {
+        modoAR = false;
+        if (cam == null) cam = Camera.main;
+        if (cam != null) { cam.nearClipPlane = 0.3f; ConfigurarCamaraPlana(); }
     }
 
     // En pantallas verticales aleja la camara para que quepa todo el tablero
@@ -191,7 +207,7 @@ public class ChessGame : MonoBehaviour
 
     void Update()
     {
-        AdjustCamera(false);
+        if (!modoAR && cam != null) AdjustCamera(false);
         if (animating || status != GameStatus.Playing) return;
 
         if (IsAITurn())
