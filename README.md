@@ -29,9 +29,10 @@ Sin licencia o sin marcador el juego sigue funcionando en modo plano, con una c�
 ```
 Assets/AjedrezAR/
   Scripts/    Core (motor de ajedrez e IA), Game (tablero, piezas, interfaz), AR (marcador con Vuforia), Editor (menús)
-  Modelos/    modelos 3D de las piezas (.obj)
-  Materiales/ Tablero, Marco, Pieza_Blanca, Pieza_Negra, Resaltado
-  Texturas/   Tablero, Madera, Marmol, Marcador
+  Modelos/    Blancas y Negras: las 12 piezas de Meshy (.obj). Los .obj sueltos son los modelos viejos de la prueba 1
+  Materiales/ una por pieza y color (Peon_Blanca ... Rey_Negra), Resaltado y los de la prueba 1
+  Texturas/   Piezas (12 jpg de 2048 px), Marcador y las de la prueba 1
+  Resources/Tablero3D/  el tablero de Meshy (.obj, textura y material); Tablero.cs lo carga al iniciar
 docs/         PROMPTS_MESHY.md (prompts de Meshy AI para el arte y los modelos)
   Prefabs/    Ajedrez y Piezas (12 prefabs, uno por tipo y color)
   Escenas/    Instrucciones y AjedrezAR
@@ -42,13 +43,18 @@ Jerarquía de la escena del juego:
 ```
 Ajedrez
 └─ Tablero
-   ├─ Plano       el plano con la textura del tablero
-   ├─ Marco
+   ├─ Tablero 3D  se crea al iniciar con el modelo de Resources/Tablero3D
+   ├─ Plano       el plano de la prueba 1 (se apaga si existe el tablero 3D)
+   ├─ Marco       igual, se apaga
    ├─ Casillas    64 casillas (a1 ... h8) para resaltar jugadas
    └─ Piezas
       ├─ Blancas  16 piezas, cada una con su script Pieza
       └─ Negras   16 piezas
 ```
+
+## Modelos 3D de Meshy
+
+Las piezas y el tablero salen de Meshy y se redujeron de caras para que corran en el celular: piezas de 5 000 a 8 000 caras y tablero de 60 000. Cada casilla mide 1 unidad. Alturas: peón 0.8, torre 1.0, caballo 1.1, alfil 1.2, reina 1.4, rey 1.5. Todas tienen el pivote en el centro de la base. Las blancas son las verde neón y las negras las naranja y rosa. El tablero queda con su superficie de juego en y = 0 y se sube 1.28 para que la base apoye en el marcador. Al abrirlo, la casilla a1 debe verse oscura.
 
 ## Pantallas
 
@@ -63,7 +69,7 @@ Ajedrez
 
 ## Menú del editor
 
-`Ajedrez > Preparar proyecto` regenera materiales, prefabs y escenas. `Ajedrez > Configurar AR con Vuforia (P2)` prepara la cámara AR, el marcador y Android. `Ajedrez > Exportar .unitypackage` crea el paquete en `Entregables/`.
+`Ajedrez > Preparar proyecto` regenera materiales, prefabs y escenas con los modelos viejos de la prueba 1, así que ya no conviene usarlo: borraría las piezas y materiales de Meshy. `Ajedrez > Configurar AR con Vuforia (P2)` prepara la cámara AR, el marcador y Android. `Ajedrez > Exportar .unitypackage` crea el paquete en `Entregables/`.
 
 ## Siguiente
 

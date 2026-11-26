@@ -154,7 +154,7 @@ public static class ChessMenu
             GameObject q = GameObject.CreatePrimitive(PrimitiveType.Quad);
             q.name = "Casilla " + nombre;
             q.transform.SetParent(cas.transform, false);
-            q.transform.localPosition = Tablero.SquareToLocal(sq) + new Vector3(0f, 0.01f, 0f);
+            q.transform.localPosition = Tablero.SquareToLocal(sq) + new Vector3(0f, 0.05f, 0f);
             q.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
             q.transform.localScale = new Vector3(0.96f, 0.96f, 1f);
             Object.DestroyImmediate(q.GetComponent<Collider>());

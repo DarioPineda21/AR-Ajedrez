@@ -19,6 +19,10 @@ public class Tablero : MonoBehaviour
     public Casilla[] casillas = new Casilla[64];
     public Pieza[] modelos = new Pieza[12];        // prefabs, indice (tipo-1)*2 + (blanca?0:1)
 
+    // Altura de la base del tablero 3D (Resources/Tablero3D) por debajo de su superficie de juego.
+    // Se sube todo el tablero esa altura para que la base apoye en el marcador.
+    public const float AlturaBase = 1.28f;
+
     readonly List<Pieza> todas = new List<Pieza>();
     Pieza[] enCasilla = new Pieza[64];
     bool listo;
@@ -28,11 +32,40 @@ public class Tablero : MonoBehaviour
     {
         if (listo) return;
         listo = true;
+        PonerModelo3D();
         todas.Clear();
         if (piezas != null) todas.AddRange(piezas.GetComponentsInChildren<Pieza>(true));
         for (int i = 0; i < 64; i++) enCasilla[i] = null;
         for (int i = 0; i < todas.Count; i++)
             if (todas[i].gameObject.activeSelf) enCasilla[todas[i].indiceCasilla] = todas[i];
+    }
+
+    // Si existe el modelo 3D del tablero (Resources/Tablero3D) se usa en lugar del plano y el marco.
+    // Su superficie de juego queda en y = 0 y cada casilla mide 1, igual que el plano.
+    void PonerModelo3D()
+    {
+        GameObject prefab = Resources.Load<GameObject>("Tablero3D/Tablero");
+        if (prefab == null) return;
+
+        GameObject m = Instantiate(prefab, transform);
+        m.name = "Tablero 3D";
+        m.transform.localPosition = Vector3.zero;
+        m.transform.localRotation = Quaternion.identity;
+        m.transform.localScale = Vector3.one;
+
+        Material mat = Resources.Load<Material>("Tablero3D/Tablero3D");
+        if (mat != null)
+        {
+            foreach (MeshRenderer r in m.GetComponentsInChildren<MeshRenderer>())
+                r.sharedMaterial = mat;
+        }
+
+        Transform plano = transform.Find("Plano");
+        if (plano != null) plano.gameObject.SetActive(false);
+        Transform marco = transform.Find("Marco");
+        if (marco != null) marco.gameObject.SetActive(false);
+
+        transform.localPosition = new Vector3(0f, AlturaBase, 0f);
     }
 
     // ---------- Coordenadas ----------
